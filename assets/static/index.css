@@ -1,0 +1,11 @@
+.quote-container {
+  display: flexbox;
+}
+
+.quote {
+  font-family: 'Margarine', cursive;
+}
+
+.author {
+  font-size: 20px;
+}
