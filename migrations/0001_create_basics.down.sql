@@ -1,0 +1,5 @@
+DROP TABLE IF EXISTS quotes;
+
+DROP TABLE IF EXISTS tags;
+
+DROP TABLE IF EXISTS tags_rel;
