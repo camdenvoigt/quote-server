@@ -1,0 +1,32 @@
+{
+  "db_name": "SQLite",
+  "query": "\n        SELECT * FROM quotes WHERE ?1 = quote_id;\n        ",
+  "describe": {
+    "columns": [
+      {
+        "name": "quote_id",
+        "ordinal": 0,
+        "type_info": "Integer"
+      },
+      {
+        "name": "quote",
+        "ordinal": 1,
+        "type_info": "Text"
+      },
+      {
+        "name": "author",
+        "ordinal": 2,
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "a1435a9012ef0f7876825b33e1e985fd770d5e20dd5c8dd3dc530ff9c50a6d28"
+}

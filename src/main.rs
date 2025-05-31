@@ -1,9 +1,17 @@
 use axum::{Router, routing::get};
 use sqlx::{SqlitePool, sqlite, migrate::MigrateDatabase};
+use tokio::sync::RwLock;
+use std::sync::Arc;
 
 mod handlers;
 mod quote;
 mod templates;
+
+struct AppState {
+    db: SqlitePool
+}
+
+type ApplicationState = Arc<RwLock<AppState>>;
 
 async fn serve() -> Result<(), Box<dyn std::error::Error>> {
     let db_uri = "sqlite://db/quote-server";
@@ -16,7 +24,14 @@ async fn serve() -> Result<(), Box<dyn std::error::Error>> {
     let db_conn = SqlitePool::connect(db_uri).await?;
     sqlx::migrate!().run(&db_conn).await?;
 
-    let app = Router::new().route("/", get(handlers::handle_get_index));
+    let app_state = AppState { db: db_conn };
+    let state = Arc::new(RwLock::new(app_state));
+
+    let app = Router::new()
+        .route("/", get(handlers::handle_get_index))
+        .route("/quote", get(handlers::handle_get_quote))
+        .route("/add-quote", get(handlers::handle_add_quote))
+        .with_state(state);
 
     let listener = tokio::net::TcpListener::bind("127.0.0.1:3000")
         .await

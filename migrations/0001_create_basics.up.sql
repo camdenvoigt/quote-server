@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS quotes (
-  quote_id SERIAL INT UNQIUE PRIMAY KEY,
-  quote varchar(500),
-  author VARCHAR(200)
+  quote_id SERIAL INT UNQIUE NOT NULL,
+  quote varchar(500) NOT NULL,
+  author VARCHAR(200) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS tags_rel (
@@ -12,6 +12,6 @@ CREATE TABLE IF NOT EXISTS tags_rel (
 );
 
 CREATE TABLE IF NOT EXISTS tags (
-  tag_id INT UNQIUE PRIMARY KEY,
-  tag VARCHAR(100)
+  tag_id INT UNQIUE NOT NULL,
+  tag VARCHAR(100) NOT NULL
 );
