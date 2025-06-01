@@ -1,5 +1,5 @@
 use crate::*;
-use axum::{response, response::IntoResponse, http, extract::State};
+use axum::{response, response::IntoResponse, http, extract::{State, Path}};
 
 pub async fn handle_get_index() -> response::Html<String> {
     log::error!("Testing here");
@@ -35,8 +35,7 @@ pub async fn handle_add_quote(State(app_state) : State<ApplicationState>) -> any
     }
 }
 
-pub async fn handle_get_quote(State(app_state) : State<ApplicationState>) -> anyhow::Result<response::Response, http::StatusCode> {
-    let id = 1;    
+pub async fn handle_get_quote(State(app_state) : State<ApplicationState>, Path(id) : Path<i64>) -> anyhow::Result<response::Response, http::StatusCode> {
     let app_reader = app_state.read().await;
     let db = &app_reader.db;
 
@@ -44,6 +43,6 @@ pub async fn handle_get_quote(State(app_state) : State<ApplicationState>) -> any
 
     match quote_res {
         Ok(quote) => Ok(quote.into_response()),
-        Err(_) => Err(http::StatusCode::INTERNAL_SERVER_ERROR)
+        Err(_) => Err(http::StatusCode::NOT_FOUND)
     }
 }
