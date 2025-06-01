@@ -3,6 +3,10 @@ use sqlx::{SqlitePool, sqlite, migrate::MigrateDatabase};
 use tokio::sync::RwLock;
 use std::sync::Arc;
 
+extern crate log;
+
+use simple_logger;
+
 mod handlers;
 mod quote;
 mod templates;
@@ -14,6 +18,8 @@ struct AppState {
 type ApplicationState = Arc<RwLock<AppState>>;
 
 async fn serve() -> Result<(), Box<dyn std::error::Error>> {
+    simple_logger::SimpleLogger::new().env().init().unwrap();
+
     let db_uri = "sqlite://db/quote-server";
 
     if !sqlite::Sqlite::database_exists(&db_uri).await? {

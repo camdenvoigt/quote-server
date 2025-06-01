@@ -12,14 +12,15 @@ pub struct Quote {
 
 impl Quote {
     pub fn new(quote: String, author: String) -> Self {
-        Self { quote_id: -1, quote, author }
+        Self { quote_id: 1, quote, author }
     }
 
     pub async fn save_to_db(&self, db: &SqlitePool) -> anyhow::Result<i64> {
         let id = sqlx::query!(
         "
-         INSERT INTO quotes (quote, author) VALUES(?1, ?2);
+         INSERT INTO quotes (quote_id, quote, author) VALUES(?1, ?2, ?3);
         ",
+        self.quote_id,
         self.quote,
         self.author
         )

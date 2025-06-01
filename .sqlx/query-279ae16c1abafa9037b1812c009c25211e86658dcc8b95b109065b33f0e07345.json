@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "\n         INSERT INTO quotes (quote_id, quote, author) VALUES(?1, ?2, ?3);\n        ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 3
+    },
+    "nullable": []
+  },
+  "hash": "279ae16c1abafa9037b1812c009c25211e86658dcc8b95b109065b33f0e07345"
+}

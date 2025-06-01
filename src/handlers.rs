@@ -2,6 +2,7 @@ use crate::*;
 use axum::{response, response::IntoResponse, http, extract::State};
 
 pub async fn handle_get_index() -> response::Html<String> {
+    log::error!("Testing here");
     let quote = quote::Quote::new(
         String::from(
             "I can calculate the motion of heavenly bodies but not the madness of people.",
@@ -27,7 +28,10 @@ pub async fn handle_add_quote(State(app_state) : State<ApplicationState>) -> any
     let quote_res = quote.save_to_db(&db).await;
     match quote_res {
         Ok(_) => Ok("Added to Database".into_response()),
-        Err(_) => Err(http::StatusCode::INTERNAL_SERVER_ERROR)
+        Err(err) => {
+            log::error!("{}", err);
+            Err(http::StatusCode::INTERNAL_SERVER_ERROR)
+        }
     }
 }
 
