@@ -2,8 +2,9 @@ use serde::{Serialize, Deserialize};
 use axum::response::{IntoResponse, Response};
 use axum::http;
 use sqlx::SqlitePool;
+use utoipa::ToSchema;
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, ToSchema)]
 pub struct Quote {
     pub quote_id: i64,
     pub quote: String,

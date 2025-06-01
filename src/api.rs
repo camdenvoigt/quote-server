@@ -1,5 +1,6 @@
 use crate::*;
-use axum::{response, response::IntoResponse, http, extract::{State, Path}, Router, routing};
+use crate::quote::Quote;
+use axum::{response, response::IntoResponse, http, extract::{State, Json, Path}, Router, routing};
 
 pub fn get_router() -> Router<ApplicationState> {
     Router::new()
@@ -7,6 +8,14 @@ pub fn get_router() -> Router<ApplicationState> {
     .route("/quote/add-quote", routing::get(handle_add_quote))
 }
 
+#[utoipa::path(
+    get,
+    path = "/add-quote",
+    responses(
+        (status = 200, description = "Successfully added to database", body = String),
+        (status = 500, description = "Insert into database failed")
+    )
+)]
 pub async fn handle_add_quote(State(app_state) : State<ApplicationState>) -> anyhow::Result<response::Response, http::StatusCode> {
     let app_reader = app_state.read().await;
     let db = &app_reader.db;
@@ -28,6 +37,17 @@ pub async fn handle_add_quote(State(app_state) : State<ApplicationState>) -> any
     }
 }
 
+#[utoipa::path(
+    get,
+    path = "/quote/{id}",
+    params(
+        ("id", description = "Quote id"),
+    ),
+    responses(
+        (status = 200, description = "Get Quote success", body = Quote),
+        (status = 404, description = "Could not find quote")
+    )
+)]
 pub async fn handle_get_quote(State(app_state) : State<ApplicationState>, Path(id) : Path<i64>) -> anyhow::Result<response::Response, http::StatusCode> {
     let app_reader = app_state.read().await;
     let db = &app_reader.db;
