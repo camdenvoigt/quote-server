@@ -10,6 +10,7 @@ use simple_logger;
 mod handlers;
 mod quote;
 mod templates;
+mod api;
 
 struct AppState {
     db: SqlitePool
@@ -39,8 +40,7 @@ async fn serve() -> Result<(), Box<dyn std::error::Error>> {
     // Setup the Server
     let app = Router::new()
         .route("/", get(handlers::handle_get_index))
-        .route("/quote/{id}", get(handlers::handle_get_quote))
-        .route("/add-quote", get(handlers::handle_add_quote))
+        .nest("/api/v1", api::get_router())
         .with_state(state);
 
     // Start the server
