@@ -36,9 +36,12 @@ async fn serve() -> Result<(), Box<dyn std::error::Error>> {
     let db_conn = SqlitePool::connect(db_uri).await?;
     sqlx::migrate!().run(&db_conn).await?;
 
+    // get api
+    let (api_router, openapi) = api::get_router().split_for_parts();
+
     // setup swagger_ui
     let swagger_ui = SwaggerUi::new("/swagger-ui")
-        .url("/api-docs/openapi.json", ApiDoc::openapi());
+        .url("/api-docs/openapi.json", openapi);
 
     // Set up the application state
     let app_state = AppState { db: db_conn };
@@ -47,7 +50,7 @@ async fn serve() -> Result<(), Box<dyn std::error::Error>> {
     // Setup the Server
     let app = Router::new()
         .route("/", get(handlers::handle_get_index))
-        .nest("/api/v1", api::get_router().into())
+        .nest("/api/v1", api_router)
         .merge(swagger_ui)
         .with_state(state);
 

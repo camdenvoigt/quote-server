@@ -4,11 +4,6 @@ use axum::{response, response::IntoResponse, http, extract::{State, Path}};
 use utoipa::OpenApi;
 use utoipa_axum::{routes, router::OpenApiRouter};
 
-#[derive(OpenApi)]
-#[openapi(
-    info(description = "Quote Api"),
-)]
-pub struct ApiDoc;
 
 pub fn get_router() -> OpenApiRouter<ApplicationState> {
     OpenApiRouter::new()
@@ -67,3 +62,9 @@ pub async fn handle_get_quote(State(app_state) : State<ApplicationState>, Path(i
         Err(_) => Err(http::StatusCode::NOT_FOUND)
     }
 }
+
+#[derive(OpenApi)]
+#[openapi(
+    info(description = "Quote Api"),
+)]
+pub struct ApiDoc;
