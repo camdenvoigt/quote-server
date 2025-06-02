@@ -1,11 +1,19 @@
 use crate::*;
 use crate::quote::Quote;
-use axum::{response, response::IntoResponse, http, extract::{State, Json, Path}, Router, routing};
+use axum::{response, response::IntoResponse, http, extract::{State, Path}};
+use utoipa::OpenApi;
+use utoipa_axum::{routes, router::OpenApiRouter};
 
-pub fn get_router() -> Router<ApplicationState> {
-    Router::new()
-    .route("/quote/{id}", routing::get(handle_get_quote))
-    .route("/quote/add-quote", routing::get(handle_add_quote))
+#[derive(OpenApi)]
+#[openapi(
+    info(description = "Quote Api"),
+)]
+pub struct ApiDoc;
+
+pub fn get_router() -> OpenApiRouter<ApplicationState> {
+    OpenApiRouter::new()
+    .routes(routes!(handle_add_quote))
+    .routes(routes!(handle_get_quote))
 }
 
 #[utoipa::path(

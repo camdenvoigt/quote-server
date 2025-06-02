@@ -36,9 +36,15 @@ version = "0.8.6"
 features = ["runtime-tokio", "sqlite", "derive", "macros", "migrate", "chrono", "json"]
 
 [dependencies.utoipa]
-version = "5.3.1"
+git = "https://github.com/juhaku/utoipa.git"
+rev = "cecda0531bf7d90800af66b186055932ee730526"
 features = ["axum_extras"]
 
 [dependencies.utoipa-axum]
 git = "https://github.com/juhaku/utoipa.git"
 rev = "cecda0531bf7d90800af66b186055932ee730526"
+
+[dependencies.utoipa-swagger-ui]
+git = "https://github.com/juhaku/utoipa.git"
+rev = "cecda0531bf7d90800af66b186055932ee730526"
+features = ["axum"]

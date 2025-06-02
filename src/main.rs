@@ -2,6 +2,9 @@ use axum::{Router, routing::get};
 use sqlx::{SqlitePool, sqlite, migrate::MigrateDatabase};
 use tokio::sync::RwLock;
 use std::sync::Arc;
+use utoipa_swagger_ui::SwaggerUi;
+use crate::api::ApiDoc;
+use utoipa::OpenApi;
 
 extern crate log;
 
@@ -33,6 +36,10 @@ async fn serve() -> Result<(), Box<dyn std::error::Error>> {
     let db_conn = SqlitePool::connect(db_uri).await?;
     sqlx::migrate!().run(&db_conn).await?;
 
+    // setup swagger_ui
+    let swagger_ui = SwaggerUi::new("/swagger-ui")
+        .url("/api-docs/openapi.json", ApiDoc::openapi());
+
     // Set up the application state
     let app_state = AppState { db: db_conn };
     let state = Arc::new(RwLock::new(app_state));
@@ -40,7 +47,8 @@ async fn serve() -> Result<(), Box<dyn std::error::Error>> {
     // Setup the Server
     let app = Router::new()
         .route("/", get(handlers::handle_get_index))
-        .nest("/api/v1", api::get_router())
+        .nest("/api/v1", api::get_router().into())
+        .merge(swagger_ui)
         .with_state(state);
 
     // Start the server
