@@ -7,8 +7,9 @@ use utoipa_axum::{routes, router::OpenApiRouter};
 
 pub fn get_router() -> OpenApiRouter<ApplicationState> {
     OpenApiRouter::new()
-    .routes(routes!(handle_add_quote))
-    .routes(routes!(handle_get_quote))
+        .routes(routes!(handle_add_quote))
+        .routes(routes!(handle_get_quote))
+        .routes(routes!(handle_get_random_quote))
 }
 
 #[utoipa::path(
@@ -56,6 +57,26 @@ pub async fn handle_get_quote(State(app_state) : State<ApplicationState>, Path(i
     let db = &app_reader.db;
 
     let quote_res = quote::get(&db, id).await;
+
+    match quote_res {
+        Ok(quote) => Ok(quote.into_response()),
+        Err(_) => Err(http::StatusCode::NOT_FOUND)
+    }
+}
+
+#[utoipa::path(
+    get,
+    path = "/api/v1/quote/random",
+    responses(
+        (status = 200, description = "Get Quote success", body = Quote),
+        (status = 404, description = "Could not find quote")
+    )
+)]
+pub async fn handle_get_random_quote(State(app_state) : State<ApplicationState>) -> anyhow::Result<response::Response, http::StatusCode> {
+    let app_reader = app_state.read().await;
+    let db = &app_reader.db;
+
+    let quote_res = quote::get_random(db).await;
 
     match quote_res {
         Ok(quote) => Ok(quote.into_response()),

@@ -51,3 +51,15 @@ pub async fn get(db: &SqlitePool, id: i64) -> anyhow::Result<Quote> {
 
     Ok(quote)
 }
+
+pub async fn get_random(db: &SqlitePool) -> anyhow::Result<Quote> {
+    let quote = sqlx::query_as!(Quote,
+        "
+        SELECT * FROM quotes ORDER BY RANDOM() LIMIT 1;
+        "
+    )
+    .fetch_one(db)
+    .await?;
+
+    Ok(quote)
+}

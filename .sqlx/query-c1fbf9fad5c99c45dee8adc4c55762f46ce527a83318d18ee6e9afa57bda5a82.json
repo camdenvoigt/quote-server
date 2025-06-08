@@ -1,0 +1,32 @@
+{
+  "db_name": "SQLite",
+  "query": "\n        SELECT * FROM quotes ORDER BY RANDOM() LIMIT 1;\n        ",
+  "describe": {
+    "columns": [
+      {
+        "name": "quote_id",
+        "ordinal": 0,
+        "type_info": "Integer"
+      },
+      {
+        "name": "quote",
+        "ordinal": 1,
+        "type_info": "Text"
+      },
+      {
+        "name": "author",
+        "ordinal": 2,
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Right": 0
+    },
+    "nullable": [
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "c1fbf9fad5c99c45dee8adc4c55762f46ce527a83318d18ee6e9afa57bda5a82"
+}
