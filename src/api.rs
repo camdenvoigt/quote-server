@@ -13,7 +13,7 @@ pub fn get_router() -> OpenApiRouter<ApplicationState> {
 
 #[utoipa::path(
     get,
-    path = "/add-quote",
+    path = "/api/v1/add-quote",
     responses(
         (status = 200, description = "Successfully added to database", body = String),
         (status = 500, description = "Insert into database failed")
@@ -42,7 +42,7 @@ pub async fn handle_add_quote(State(app_state) : State<ApplicationState>) -> any
 
 #[utoipa::path(
     get,
-    path = "/quote/{id}",
+    path = "/api/v1/quote/{id}",
     params(
         ("id", description = "Quote id"),
     ),

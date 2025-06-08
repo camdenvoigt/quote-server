@@ -50,7 +50,7 @@ async fn serve() -> Result<(), Box<dyn std::error::Error>> {
     // Setup the Server
     let app = Router::new()
         .route("/", get(handlers::handle_get_index))
-        .nest("/api/v1", api_router)
+        .merge(api_router)
         .merge(swagger_ui)
         .with_state(state);
 
