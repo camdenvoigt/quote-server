@@ -1,0 +1,3 @@
+[submodule "quote-frontend"]
+	path = quote-frontend
+	url = https://github.com/camdenvoigt/quote-frontend.git
