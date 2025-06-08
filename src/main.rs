@@ -5,6 +5,7 @@ use std::sync::Arc;
 use utoipa_swagger_ui::SwaggerUi;
 use crate::api::ApiDoc;
 use utoipa::OpenApi;
+use clap::Parser;
 
 extern crate log;
 
@@ -15,13 +16,28 @@ mod quote;
 mod templates;
 mod api;
 
+/// A webserver to get and display famous quotes
+#[derive(Parser, Debug)]
+#[command(version, about, long_about = None)]
+struct Args {
+    /// A path to a csv to initialize the quote database from
+    #[arg(short, long, name="init-from")]
+    init_from: Option<std::path::PathBuf>
+}
+
 struct AppState {
     db: SqlitePool
 }
 
 type ApplicationState = Arc<RwLock<AppState>>;
 
+async fn init_db(path : std::path::PathBuf, db_conn : &SqlitePool) -> anyhow::Result<()> {
+    Ok(())   
+}
+
 async fn serve() -> Result<(), Box<dyn std::error::Error>> {
+    let args = Args::parse();
+
     // setup logger
     simple_logger::SimpleLogger::new().env().init().unwrap();
 
@@ -35,6 +51,10 @@ async fn serve() -> Result<(), Box<dyn std::error::Error>> {
 
     let db_conn = SqlitePool::connect(db_uri).await?;
     sqlx::migrate!().run(&db_conn).await?;
+
+    if let Some(init_from) = args.init_from {
+        init_db(init_from, &db_conn).await?;
+    }
 
     // get api
     let (api_router, openapi) = api::get_router().split_for_parts();
