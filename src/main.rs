@@ -37,8 +37,8 @@ async fn init_db(path : std::path::PathBuf, db_conn : &SqlitePool) -> anyhow::Re
         let record = result?;
         let quote = quote::Quote {
             quote_id: i as i64,
-            quote: record.get(0).unwrap().to_string(),
-            author: record.get(1).unwrap().to_string(),
+            quote: record.get(1).unwrap().to_string(),
+            author: record.get(0).unwrap().to_string(),
         };
         quote.save_to_db(db_conn).await?;
     }
