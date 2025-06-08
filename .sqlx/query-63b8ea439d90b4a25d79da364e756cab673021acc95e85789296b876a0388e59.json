@@ -1,6 +1,6 @@
 {
   "db_name": "SQLite",
-  "query": "\n        SELECT * FROM quotes ORDER BY RANDOM() LIMIT 1;\n        ",
+  "query": "\n        SELECT quote_id, quote, author FROM quotes ORDER BY RANDOM() LIMIT 1;\n        ",
   "describe": {
     "columns": [
       {
@@ -28,5 +28,5 @@
       false
     ]
   },
-  "hash": "c1fbf9fad5c99c45dee8adc4c55762f46ce527a83318d18ee6e9afa57bda5a82"
+  "hash": "63b8ea439d90b4a25d79da364e756cab673021acc95e85789296b876a0388e59"
 }

@@ -7,8 +7,8 @@ use utoipa::ToSchema;
 #[derive(Serialize, Deserialize, Debug, ToSchema)]
 pub struct Quote {
     pub quote_id: i64,
-    pub quote: String,
     pub author: String,
+    pub quote: String,
 }
 
 impl Quote {
@@ -52,10 +52,11 @@ pub async fn get(db: &SqlitePool, id: i64) -> anyhow::Result<Quote> {
     Ok(quote)
 }
 
+// Maps quote to author and author to quote. I can't figure out why.
 pub async fn get_random(db: &SqlitePool) -> anyhow::Result<Quote> {
     let quote = sqlx::query_as!(Quote,
         "
-        SELECT * FROM quotes ORDER BY RANDOM() LIMIT 1;
+        SELECT quote_id, quote, author FROM quotes ORDER BY RANDOM() LIMIT 1;
         "
     )
     .fetch_one(db)

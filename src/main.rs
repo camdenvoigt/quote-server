@@ -1,4 +1,4 @@
-use axum::{Router, routing::get};
+use axum::{http, Router, routing::get};
 use sqlx::{SqlitePool, sqlite, migrate::MigrateDatabase};
 use tokio::sync::RwLock;
 use std::sync::Arc;
@@ -66,6 +66,10 @@ async fn serve() -> Result<(), Box<dyn std::error::Error>> {
         init_db(init_from, &db_conn).await?;
     }
 
+    let cors = tower_http::cors::CorsLayer::new()
+        .allow_methods([http::Method::GET, http::Method::POST])
+        .allow_origin(tower_http::cors::Any);
+
     // get api
     let (api_router, openapi) = api::get_router().split_for_parts();
 
@@ -82,6 +86,7 @@ async fn serve() -> Result<(), Box<dyn std::error::Error>> {
         .route("/", get(handlers::handle_get_index))
         .merge(api_router)
         .merge(swagger_ui)
+        .layer(cors)
         .with_state(state);
 
     // Start the server
