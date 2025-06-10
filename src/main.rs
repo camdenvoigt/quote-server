@@ -22,7 +22,13 @@ mod api;
 struct Args {
     /// A path to a csv to initialize the quote database from
     #[arg(short, long, name="init-from")]
-    init_from: Option<std::path::PathBuf>
+    init_from: Option<std::path::PathBuf>,
+    /// ip address to run on
+    #[arg(short, long, name="ip address", default_value="127.0.0.1")]
+    address: String,
+    /// port to run on
+    #[arg(short, long, name="port", default_value="3000")]
+    port: u16
 }
 
 struct AppState {
@@ -90,7 +96,8 @@ async fn serve() -> Result<(), Box<dyn std::error::Error>> {
         .with_state(state);
 
     // Start the server
-    let listener = tokio::net::TcpListener::bind("127.0.0.1:3000")
+    let location = format!("{}:{}", args.address, args.port);
+    let listener = tokio::net::TcpListener::bind(&location)
         .await
         .unwrap();
     axum::serve(listener, app).await.unwrap();

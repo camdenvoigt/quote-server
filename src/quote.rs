@@ -52,7 +52,6 @@ pub async fn get(db: &SqlitePool, id: i64) -> anyhow::Result<Quote> {
     Ok(quote)
 }
 
-// Maps quote to author and author to quote. I can't figure out why.
 pub async fn get_random(db: &SqlitePool) -> anyhow::Result<Quote> {
     let quote = sqlx::query_as!(Quote,
         "
